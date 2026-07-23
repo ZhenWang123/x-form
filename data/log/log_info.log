@@ -10,3 +10,5 @@
 26-07-23.22:02:23.812 [main            ] INFO  Http11NioProtocol      - Starting ProtocolHandler ["http-nio-8091"]
 26-07-23.22:02:23.830 [main            ] INFO  TomcatWebServer        - Tomcat started on port 8091 (http) with context path '/'
 26-07-23.22:02:23.837 [main            ] INFO  Application            - Started Application in 2.867 seconds (process running for 5.079)
+26-07-23.22:05:24.714 [SpringApplicationShutdownHook] INFO  GracefulShutdown       - Commencing graceful shutdown. Waiting for active requests to complete
+26-07-23.22:05:24.947 [tomcat-shutdown ] INFO  GracefulShutdown       - Graceful shutdown complete
