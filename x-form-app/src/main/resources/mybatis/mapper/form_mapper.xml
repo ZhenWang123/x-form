@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wz.x.infrastructure.dao.IFormDao">
+
+    <resultMap id="formMap" type="com.wz.x.infrastructure.dao.po.FormPO">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="description" property="description"/>
+        <result column="schema_json" property="schemaJson"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.wz.x.infrastructure.dao.po.FormPO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO x_form(title, description, schema_json, create_time, update_time)
+        VALUES(#{title}, #{description}, #{schemaJson}, NOW(), NOW())
+    </insert>
+
+    <select id="queryForms" resultMap="formMap">
+        SELECT id, title, description, schema_json, create_time, update_time
+        FROM x_form ORDER BY id DESC
+    </select>
+
+    <select id="queryById" parameterType="java.lang.Long" resultMap="formMap">
+        SELECT id, title, description, schema_json, create_time, update_time
+        FROM x_form WHERE id = #{id}
+    </select>
+
+</mapper>

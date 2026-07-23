@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wz.x.infrastructure.dao.IFormRecordDao">
+
+    <resultMap id="recordMap" type="com.wz.x.infrastructure.dao.po.FormRecordPO">
+        <id column="id" property="id"/>
+        <result column="form_id" property="formId"/>
+        <result column="user_name" property="userName"/>
+        <result column="payload_json" property="payloadJson"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.wz.x.infrastructure.dao.po.FormRecordPO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO x_form_record(form_id, user_name, payload_json, create_time)
+        VALUES(#{formId}, #{userName}, #{payloadJson}, NOW())
+    </insert>
+
+    <select id="queryRecords" resultMap="recordMap">
+        SELECT id, form_id, user_name, payload_json, create_time
+        FROM x_form_record
+        <where>
+            <if test="formId != null">
+                form_id = #{formId}
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+</mapper>

@@ -1,0 +1,12 @@
+26-07-23.22:02:21.711 [main            ] INFO  Application            - Starting Application using Java 17.0.12 with PID 34364 (C:\项目号\x-form\x-form-app\target\classes started by 92849 in C:\项目号\x-form)
+26-07-23.22:02:21.711 [main            ] INFO  Application            - The following 1 profile is active: "dev"
+26-07-23.22:02:23.019 [main            ] INFO  TomcatWebServer        - Tomcat initialized with port 8091 (http)
+26-07-23.22:02:23.037 [main            ] INFO  Http11NioProtocol      - Initializing ProtocolHandler ["http-nio-8091"]
+26-07-23.22:02:23.037 [main            ] INFO  StandardService        - Starting service [Tomcat]
+26-07-23.22:02:23.037 [main            ] INFO  StandardEngine         - Starting Servlet engine: [Apache Tomcat/10.1.36]
+26-07-23.22:02:23.116 [main            ] INFO  [/]                    - Initializing Spring embedded WebApplicationContext
+26-07-23.22:02:23.116 [main            ] INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1362 ms
+26-07-23.22:02:23.456 [main            ] INFO  OptionalValidatorFactoryBean - Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+26-07-23.22:02:23.812 [main            ] INFO  Http11NioProtocol      - Starting ProtocolHandler ["http-nio-8091"]
+26-07-23.22:02:23.830 [main            ] INFO  TomcatWebServer        - Tomcat started on port 8091 (http) with context path '/'
+26-07-23.22:02:23.837 [main            ] INFO  Application            - Started Application in 2.867 seconds (process running for 5.079)

@@ -9,9 +9,9 @@ import com.wz.x.infrastructure.dao.IFormDao;
 import com.wz.x.infrastructure.dao.IFormRecordDao;
 import com.wz.x.infrastructure.dao.po.FormPO;
 import com.wz.x.infrastructure.dao.po.FormRecordPO;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
