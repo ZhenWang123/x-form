@@ -5,79 +5,109 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>x-form 管理端</title>
   <style>
+    *{box-sizing:border-box}
     body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f7fb;color:#1f2937}
     .layout{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
     .sidebar{background:#111827;color:#fff;padding:24px}
     .sidebar h1{font-size:20px;margin:0 0 24px}
-    .sidebar a{display:block;color:#cbd5e1;text-decoration:none;padding:10px 12px;border-radius:8px;margin-bottom:8px}
-    .sidebar a:hover,.sidebar a.active{background:#1f2937;color:#fff}
+    .nav-item{display:block;color:#cbd5e1;text-decoration:none;padding:12px;border-radius:10px;margin-bottom:10px;cursor:pointer}
+    .nav-item:hover,.nav-item.active{background:#1f2937;color:#fff}
     .content{padding:24px}
+    .section{display:none}
+    .section.active{display:block}
     .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
     .card,.panel{background:#fff;border-radius:16px;padding:20px;box-shadow:0 6px 24px rgba(15,23,42,.06)}
     .panel h3{margin-top:0}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
     input,textarea,button{font:inherit}
-    input,textarea{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:10px;box-sizing:border-box;margin-bottom:12px}
+    input,textarea,select{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:10px;margin-bottom:12px;background:#fff}
     button{background:#2563eb;color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer}
+    button.secondary{background:#e5e7eb;color:#111827}
     table{width:100%;border-collapse:collapse}
     th,td{padding:12px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:14px;vertical-align:top}
     .muted{color:#6b7280;font-size:13px}
     .toolbar{display:flex;gap:12px;align-items:center;margin-bottom:12px}
-    .toolbar input{margin-bottom:0;flex:1}
+    .toolbar input,.toolbar select{margin-bottom:0;flex:1}
     #message{margin:0 0 12px;min-height:20px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .empty{padding:20px;border:1px dashed #cbd5e1;border-radius:12px;color:#64748b;background:#f8fafc}
   </style>
 </head>
 <body>
 <div class="layout">
   <aside class="sidebar">
     <h1>x-form 管理端</h1>
-    <a href="#" class="active">仪表盘</a>
-    <a href="#forms">表单管理</a>
-    <a href="#records">填写记录</a>
+    <a class="nav-item active" data-section="dashboardSection">仪表盘</a>
+    <a class="nav-item" data-section="formsSection">表单管理</a>
+    <a class="nav-item" data-section="recordsSection">填写记录</a>
   </aside>
   <main class="content">
+    <div class="topbar">
+      <div>
+        <h2 style="margin:0">运营管理后台</h2>
+        <p class="muted" style="margin:6px 0 0">支持表单创建、分享、提交记录查看</p>
+      </div>
+      <div id="userBar" class="muted"></div>
+    </div>
+
     <p id="message"></p>
+
     <section id="loginPanel" class="panel" style="max-width:480px;margin-bottom:16px">
-      <h3>模拟登录</h3>
-      <input id="account" placeholder="账号（admin）" />
-      <input id="password" type="password" placeholder="密码（123456）" />
-      <button id="loginBtn">登录</button>
-      <p class="muted">说明：当前为模拟登录，后续可替换为真实认证。</p>
+      <h3>用户登录</h3>
+      <input id="account" placeholder="请输入账号" />
+      <input id="password" type="password" placeholder="请输入密码" />
+      <div style="display:flex;gap:12px">
+        <button id="loginBtn">登录</button>
+        <button id="logoutBtn" class="secondary" type="button">退出登录</button>
+      </div>
+      <p class="muted">说明：当前调用后端登录接口，接口成功后进入管理后台。</p>
     </section>
 
     <div id="dashboard" style="display:none">
-      <div class="cards">
-        <div class="card"><div class="muted">表单数量</div><h2 id="formCount">0</h2></div>
-        <div class="card"><div class="muted">提交数量</div><h2 id="recordCount">0</h2></div>
-        <div class="card"><div class="muted">最新表单</div><h2 id="latestForm">-</h2></div>
-      </div>
-      <div class="grid">
-        <section class="panel" id="forms">
-          <h3>创建表单</h3>
-          <input id="title" placeholder="表单标题" />
-          <textarea id="description" rows="3" placeholder="表单描述"></textarea>
-          <textarea id="schema" rows="8" placeholder='字段定义(JSON)，示例：[{"name":"username","label":"姓名","type":"text","required":true}]'></textarea>
-          <button id="createBtn">创建并生成分享链接</button>
-          <p class="muted" id="shareLink"></p>
-        </section>
+      <section id="dashboardSection" class="section active">
+        <div class="cards">
+          <div class="card"><div class="muted">表单数量</div><h2 id="formCount">0</h2></div>
+          <div class="card"><div class="muted">提交数量</div><h2 id="recordCount">0</h2></div>
+          <div class="card"><div class="muted">最新表单</div><h2 id="latestForm">-</h2></div>
+        </div>
+        <div class="panel">
+          <h3>概览</h3>
+          <div id="dashboardSummary" class="empty">登录后可查看表单总览和最近数据。</div>
+        </div>
+      </section>
+
+      <section id="formsSection" class="section">
+        <div class="grid">
+          <section class="panel">
+            <h3>创建表单</h3>
+            <input id="title" placeholder="表单标题" />
+            <textarea id="description" rows="3" placeholder="表单描述"></textarea>
+            <textarea id="schema" rows="8" placeholder='字段定义(JSON)，示例：[{"name":"username","label":"姓名","type":"text","required":true}]'></textarea>
+            <button id="createBtn">创建并生成分享链接</button>
+            <p class="muted" id="shareLink"></p>
+          </section>
+          <section class="panel">
+            <h3>表单列表</h3>
+            <table>
+              <thead><tr><th>ID</th><th>标题</th><th>描述</th><th>分享链接</th></tr></thead>
+              <tbody id="formTable"></tbody>
+            </table>
+          </section>
+        </div>
+      </section>
+
+      <section id="recordsSection" class="section">
         <section class="panel">
-          <h3>表单列表</h3>
+          <h3>填写记录</h3>
+          <div class="toolbar">
+            <input id="searchFormId" placeholder="按表单ID筛选" />
+            <button id="queryRecordBtn">查询记录</button>
+          </div>
           <table>
-            <thead><tr><th>ID</th><th>标题</th><th>描述</th><th>分享链接</th></tr></thead>
-            <tbody id="formTable"></tbody>
+            <thead><tr><th>记录ID</th><th>表单ID</th><th>提交人</th><th>提交时间</th><th>内容</th></tr></thead>
+            <tbody id="recordTable"></tbody>
           </table>
         </section>
-      </div>
-      <section class="panel" id="records" style="margin-top:16px">
-        <h3>填写记录</h3>
-        <div class="toolbar">
-          <input id="searchFormId" placeholder="按表单ID筛选" />
-          <button id="queryRecordBtn">查询记录</button>
-        </div>
-        <table>
-          <thead><tr><th>记录ID</th><th>表单ID</th><th>提交人</th><th>提交时间</th><th>内容</th></tr></thead>
-          <tbody id="recordTable"></tbody>
-        </table>
       </section>
     </div>
   </main>
