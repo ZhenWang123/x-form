@@ -7,9 +7,9 @@ import com.wz.x.api.response.Response;
 import com.wz.x.domain.form.model.entity.FormEntity;
 import com.wz.x.domain.form.model.entity.FormRecordEntity;
 import com.wz.x.domain.form.service.IFormService;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @RestController

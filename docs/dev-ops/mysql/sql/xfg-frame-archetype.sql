@@ -36,9 +36,6 @@ CREATE TABLE `employee` (
   UNIQUE KEY `idx_employee_number` (`employee_number`)
 ) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Records of employee
--- ----------------------------
 BEGIN;
 INSERT INTO `employee` VALUES (1, '10000001', 'sXvfDpsWnJdLsCVk64tJgw==', 'T-3', '中级工程师', '2023-07-14 15:26:26', '2023-07-14 15:26:26');
 INSERT INTO `employee` VALUES (2, '10000010', 'sXvfDpsWnJdLsCVk64tJgw==', 'T2', '见习工程师', '2023-07-14 15:34:40', '2023-07-14 15:34:40');
@@ -53,9 +50,6 @@ INSERT INTO `employee` VALUES (24, '10000017', 'hMCgLG6WV3CsNBQ1UD6PEQ==', 'T2',
 INSERT INTO `employee` VALUES (39, '10000022', 'GyG+V0r6mBCNsdusuKl03g==', 'T1', '实习工程师', '2023-07-15 09:17:49', '2023-07-15 09:17:49');
 COMMIT;
 
--- ----------------------------
--- Table structure for employee_salary
--- ----------------------------
 DROP TABLE IF EXISTS `employee_salary`;
 CREATE TABLE `employee_salary` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -69,9 +63,6 @@ CREATE TABLE `employee_salary` (
   KEY `idx_employee_number` (`employee_number`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Records of employee_salary
--- ----------------------------
 BEGIN;
 INSERT INTO `employee_salary` VALUES (1, '10000001', 5100.00, 1020.00, 4080.00, '2023-07-14 16:09:06', '2023-07-14 16:09:06');
 INSERT INTO `employee_salary` VALUES (2, '10000010', 5000.00, 1000.00, 4000.00, '2023-07-14 16:17:10', '2023-07-14 16:17:10');
@@ -82,9 +73,6 @@ INSERT INTO `employee_salary` VALUES (6, '10000014', 5000.00, 1000.00, 4000.00, 
 INSERT INTO `employee_salary` VALUES (8, '10000022', 100.00, 10.00, 90.00, '2023-07-15 09:17:49', '2023-07-15 09:17:49');
 COMMIT;
 
--- ----------------------------
--- Table structure for employee_salary_adjust
--- ----------------------------
 DROP TABLE IF EXISTS `employee_salary_adjust`;
 CREATE TABLE `employee_salary_adjust` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -99,10 +87,37 @@ CREATE TABLE `employee_salary_adjust` (
   UNIQUE KEY `idx_order_id` (`adjust_order_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Records of employee_salary_adjust
--- ----------------------------
 BEGIN;
 INSERT INTO `employee_salary_adjust` VALUES (1, '10000001', '109089990198888811', 1000.00, 800.00, 200.00, '2023-07-14 16:55:53', '2023-07-14 16:55:53');
 INSERT INTO `employee_salary_adjust` VALUES (2, '10000001', '100908977676001', 100.00, 20.00, 80.00, '2023-07-14 21:57:39', '2023-07-14 21:57:39');
 COMMIT;
+
+-- ----------------------------
+-- Table structure for x_form
+-- ----------------------------
+DROP TABLE IF EXISTS `x_form`;
+CREATE TABLE `x_form` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `title` varchar(128) NOT NULL DEFAULT '' COMMENT '表单标题',
+  `description` varchar(512) NOT NULL DEFAULT '' COMMENT '表单描述',
+  `schema_json` text NOT NULL COMMENT '表单字段JSON',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表单定义表';
+
+-- ----------------------------
+-- Table structure for x_form_record
+-- ----------------------------
+DROP TABLE IF EXISTS `x_form_record`;
+CREATE TABLE `x_form_record` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `form_id` bigint unsigned NOT NULL COMMENT '表单ID',
+  `user_name` varchar(128) NOT NULL DEFAULT '' COMMENT '填写人',
+  `payload_json` text NOT NULL COMMENT '填写内容JSON',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_form_id` (`form_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表单填写记录表';
+
+SET FOREIGN_KEY_CHECKS = 1;

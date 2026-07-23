@@ -4,9 +4,9 @@ import com.wz.x.domain.form.adapter.repository.IFormRepository;
 import com.wz.x.domain.form.model.entity.FormEntity;
 import com.wz.x.domain.form.model.entity.FormRecordEntity;
 import com.wz.x.domain.form.service.IFormService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 

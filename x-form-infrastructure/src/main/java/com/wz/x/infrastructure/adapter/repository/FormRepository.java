@@ -1,68 +1,89 @@
 package com.wz.x.infrastructure.adapter.repository;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.wz.x.domain.form.adapter.repository.IFormRepository;
 import com.wz.x.domain.form.model.entity.FormEntity;
 import com.wz.x.domain.form.model.entity.FormRecordEntity;
+import com.wz.x.infrastructure.dao.IFormDao;
+import com.wz.x.infrastructure.dao.IFormRecordDao;
+import com.wz.x.infrastructure.dao.po.FormPO;
+import com.wz.x.infrastructure.dao.po.FormRecordPO;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
+import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class FormRepository implements IFormRepository {
 
-    private final AtomicLong formIdSeq = new AtomicLong(1);
-    private final AtomicLong recordIdSeq = new AtomicLong(1001);
-    private final Map<Long, FormEntity> formStore = new ConcurrentHashMap<>();
-    private final List<FormRecordEntity> recordStore = Collections.synchronizedList(new ArrayList<>());
+    @Resource
+    private IFormDao formDao;
+    @Resource
+    private IFormRecordDao formRecordDao;
 
     @Override
     public Long saveForm(FormEntity formEntity) {
-        Long id = formIdSeq.getAndIncrement();
-        formEntity.setId(id);
-        formStore.put(id, formEntity);
-        return id;
+        FormPO formPO = new FormPO();
+        formPO.setTitle(formEntity.getTitle());
+        formPO.setDescription(formEntity.getDescription());
+        formPO.setSchemaJson(JSON.toJSONString(formEntity.getSchema()));
+        formDao.insert(formPO);
+        return formPO.getId();
     }
 
     @Override
     public List<FormEntity> queryForms() {
-        List<FormEntity> list = new ArrayList<>(formStore.values());
-        list.sort((a, b) -> Long.compare(b.getId(), a.getId()));
+        java.util.ArrayList<FormEntity> list = new java.util.ArrayList<>();
+        for (FormPO item : formDao.queryForms()) {
+            list.add(toEntity(item));
+        }
         return list;
     }
 
     @Override
     public FormEntity queryFormById(Long formId) {
-        return formStore.get(formId);
+        FormPO formPO = formDao.queryById(formId);
+        return formPO == null ? null : toEntity(formPO);
     }
 
     @Override
     public void saveRecord(FormRecordEntity recordEntity) {
-        recordEntity.setId(recordIdSeq.getAndIncrement());
-        recordEntity.setCreateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        recordStore.add(recordEntity);
+        FormRecordPO recordPO = new FormRecordPO();
+        recordPO.setFormId(recordEntity.getFormId());
+        recordPO.setUserName(recordEntity.getUserName());
+        recordPO.setPayloadJson(JSON.toJSONString(recordEntity.getPayload()));
+        formRecordDao.insert(recordPO);
     }
 
     @Override
     public List<FormRecordEntity> queryRecords(Long formId) {
-        if (formId == null) {
-            return new ArrayList<>(recordStore);
-        }
-        List<FormRecordEntity> list = new ArrayList<>();
-        synchronized (recordStore) {
-            for (FormRecordEntity item : recordStore) {
-                if (formId.equals(item.getFormId())) {
-                    list.add(item);
-                }
-            }
+        java.util.ArrayList<FormRecordEntity> list = new java.util.ArrayList<>();
+        for (FormRecordPO item : formRecordDao.queryRecords(formId)) {
+            list.add(toRecordEntity(item));
         }
         return list;
+    }
+
+    private FormEntity toEntity(FormPO po) {
+        FormEntity entity = new FormEntity();
+        entity.setId(po.getId());
+        entity.setTitle(po.getTitle());
+        entity.setDescription(po.getDescription());
+        entity.setSchema(JSON.parseObject(po.getSchemaJson(), new TypeReference<List<Map<String, Object>>>() {}));
+        return entity;
+    }
+
+    private FormRecordEntity toRecordEntity(FormRecordPO po) {
+        FormRecordEntity entity = new FormRecordEntity();
+        entity.setId(po.getId());
+        entity.setFormId(po.getFormId());
+        entity.setUserName(po.getUserName());
+        entity.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(po.getCreateTime()));
+        entity.setPayload(JSON.parseObject(po.getPayloadJson(), new TypeReference<Map<String, Object>>() {}));
+        return entity;
     }
 
 }
