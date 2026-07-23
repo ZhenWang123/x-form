@@ -188,3 +188,5 @@ Caused by: java.lang.ClassNotFoundException: Cannot find class: com.wz.x.infrast
 26-07-23.22:29:46.102 [http-nio-8091-exec-1] INFO  [/]                    - Initializing Spring DispatcherServlet 'dispatcherServlet'
 26-07-23.22:29:46.102 [http-nio-8091-exec-1] INFO  DispatcherServlet      - Initializing Servlet 'dispatcherServlet'
 26-07-23.22:29:46.102 [http-nio-8091-exec-1] INFO  DispatcherServlet      - Completed initialization in 0 ms
+26-07-23.22:40:46.007 [SpringApplicationShutdownHook] INFO  GracefulShutdown       - Commencing graceful shutdown. Waiting for active requests to complete
+26-07-23.22:40:46.234 [tomcat-shutdown ] INFO  GracefulShutdown       - Graceful shutdown complete

@@ -148,6 +148,8 @@ const AdminPage = (() => {
 
   function init() {
     bindEvents();
+    const apiBaseTip = document.getElementById('apiBaseTip');
+    if (apiBaseTip) apiBaseTip.innerText = `当前接口地址：${api.getApiBase()}`;
     restoreSession().catch(err => showMessage(err.message || '恢复登录态失败', true));
   }
 

@@ -61,6 +61,8 @@ const UserPage = (() => {
   }
 
   async function init() {
+    const apiBaseTip = document.getElementById('apiBaseTip');
+    if (apiBaseTip) apiBaseTip.innerText = `当前接口地址：${api.getApiBase()}`;
     if (!formId) {
       showEmptyState();
       showMessage('未进入具体表单页面');
