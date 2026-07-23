@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/forms")
+@CrossOrigin(origins = "*")
 public class FormUserController {
 
     @Resource
