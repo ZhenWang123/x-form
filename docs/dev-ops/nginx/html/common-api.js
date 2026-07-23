@@ -27,7 +27,7 @@ window.XFormApi = (() => {
 
   function setToken(value) {
     token = value || '';
- if (token) localStorage.setItem('x_form_admin_token', token);
+    if (token) localStorage.setItem('x_form_admin_token', token);
     else localStorage.removeItem('x_form_admin_token');
   }
 
@@ -38,7 +38,7 @@ window.XFormApi = (() => {
 
   async function request(path, options = {}) {
     const headers = {
-      '-Type': 'application/json',
+      'Content-Type': 'application/json',
       ...(options.headers || {})
     };
     if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -50,7 +50,7 @@ window.XFormApi = (() => {
 
     const data = await response.json().catch(() => ({ code: '5000', info: '接口返回不是合法 JSON', data: null }));
     if (!response.ok) {
- throw new Error(data.info || data.message || `请求失败: ${response.status}`);
+      throw new Error(data.info || data.message || `请求失败: ${response.status}`);
     }
     return data;
   }
