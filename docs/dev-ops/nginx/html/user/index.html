@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>x-form 用户端</title>
+  <style>
+    body{margin:0;background:#f8fafc;font-family:Inter,Arial,sans-serif;color:#0f172a}
+    .wrap{max-width:760px;margin:40px auto;padding:0 16px}
+    .panel{background:#fff;border-radius:18px;padding:24px;box-shadow:0 6px 24px rgba(15,23,42,.06)}
+    h1{margin-top:0} label{display:block;margin:12px 0 6px;font-weight:600}
+    input,textarea,button{font:inherit}
+    input,textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;box-sizing:border-box}
+    button{margin-top:18px;background:#2563eb;color:#fff;border:none;padding:12px 18px;border-radius:10px;cursor:pointer}
+    .desc{color:#64748b}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="panel">
+    <h1 id="title">加载中...</h1>
+    <p class="desc" id="description"></p>
+    <form id="form"></form>
+  </div>
+</div>
+<script>
+const API='/api';
+const formId = new URLSearchParams(location.search).get('formId');
+async function request(url, options={}){ const res = await fetch(API + url, {headers:{'Content-Type':'application/json'}, ...options}); return res.json(); }
+function renderSchema(schema){
+  const form = document.getElementById('form');
+  form.innerHTML = '';
+  schema.forEach(field => {
+    const label = document.createElement('label'); label.innerText = field.label;
+    const input = field.type === 'textarea' ? document.createElement('textarea') : document.createElement('input');
+    input.name = field.name; input.placeholder = field.placeholder || ''; input.required = !!field.required; if(field.type !== 'textarea') input.type = field.type || 'text';
+    form.appendChild(label); form.appendChild(input);
+  });
+  const btn = document.createElement('button'); btn.type='submit'; btn.innerText='提交表单'; form.appendChild(btn);
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const payload = {};
+    new FormData(form).forEach((v,k)=> payload[k]=v);
+    await request('/forms/' + formId + '/submit', {method:'POST', body: JSON.stringify({payload})});
+    alert('提交成功'); form.reset();
+ ;
+}
+async function init(){
+  const res = await request('/forms/' + formId);
+  const data = res.datan  document.getElementById('title').innerText = data.title;
+  document.getElementById('description').innerText = data.description || '';
+  renderSchema(data.schema || []);
+}
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>x-form 管理端</title>
+  <style>
+    body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f7fb;color:#1f2937}
+    .layout{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+    .sidebar{background:#111827;color:#fff;padding:24px}
+    .sidebar h1{font-size:20px;margin:0 0 24px}
+    .sidebar a{display:block;color:#cbd5e1;text-decoration:none;padding:10px 12px;border-radius:8px;margin-bottom:8px}
+    .sidebar a:hover,.sidebar a.active{background:#1f2937;color:#fff}
+    .content{padding:24px}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+    .card,.panel{background:#fff;border-radius:16px;padding:20px;box-shadow:0 6px 24px rgba(15,23,42,.06)}
+    .panel h3{margin-top:0}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    input,textarea,button{font:inherit}
+    input,textarea{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:10px;box-sizing:border-box;margin-bottom:12px}
+    button{background:#2563eb;color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:12px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:14px;vertical-align:top}
+    .muted{color:#6b7280;font-size:13px}
+    .toolbar{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+    .toolbar input{margin-bottom:0;flex:1}
+    #message{margin:0 0 12px;min-height:20px}
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <h1>x-form 管理端</h1>
+    <a href="#" class="active">仪表盘</a>
+    <a href="#forms">表单管理</a>
+    <a href="#records">填写记录</a>
+  </aside>
+  <main class="content">
+    <p id="message"></p>
+    <section id="loginPanel" class="panel" style="max-width:480px;margin-bottom:16px">
+      <h3>模拟登录</h3>
+      <input id="account" placeholder="账号（admin）" />
+      <input id="password" type="password" placeholder="密码（123456）" />
+      <button id="loginBtn">登录</button>
+      <p class="muted">说明：当前为模拟登录，后续可替换为真实认证。</p>
+    </section>
+
+    <div id="dashboard" style="display:none">
+      <div class="cards">
+        <div class="card"><div class="muted">表单数量</div><h2 id="formCount">0</h2></div>
+        <div class="card"><div class="muted">提交数量</div><h2 id="recordCount">0</h2></div>
+        <div class="card"><div class="muted">最新表单</div><h2 id="latestForm">-</h2></div>
+      </div>
+      <div class="grid">
+        <section class="panel" id="forms">
+          <h3>创建表单</h3>
+          <input id="title" placeholder="表单标题" />
+          <textarea id="description" rows="3" placeholder="表单描述"></textarea>
+          <textarea id="schema" rows="8" placeholder='字段定义(JSON)，示例：[{"name":"username","label":"姓名","type":"text","required":true}]'></textarea>
+          <button id="createBtn">创建并生成分享链接</button>
+          <p class="muted" id="shareLink"></p>
+        </section>
+        <section class="panel">
+          <h3>表单列表</h3>
+          <table>
+            <thead><tr><th>ID</th><th>标题</th><th>描述</th><th>分享链接</th></tr></thead>
+            <tbody id="formTable"></tbody>
+          </table>
+        </section>
+      </div>
+      <section class="panel" id="records" style="margin-top:16px">
+        <h3>填写记录</h3>
+        <div class="toolbar">
+          <input id="searchFormId" placeholder="按表单ID筛选" />
+          <button id="queryRecordBtn">查询记录</button>
+        </div>
+        <table>
+          <thead><tr><th>记录ID</th><th>表单ID</th><th>提交人</th><th>提交时间</th><th>内容</th></tr></thead>
+          <tbody id="recordTable"></tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="../common-api.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
