@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/x-form.iml" filepath="$PROJECT_DIR$/x-form.iml" />
+      <module fileurl="file://$PROJECT_DIR$/x-form-api/x-form-api.iml" filepath="$PROJECT_DIR$/x-form-api/x-form-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/x-form-app/x-form-app.iml" filepath="$PROJECT_DIR$/x-form-app/x-form-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/x-form-case/x-form-case.iml" filepath="$PROJECT_DIR$/x-form-case/x-form-case.iml" />
+      <module fileurl="file://$PROJECT_DIR$/x-form-domain/x-form-domain.iml" filepath="$PROJECT_DIR$/x-form-domain/x-form-domain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/x-form-infrastructure/x-form-infrastructure.iml" filepath="$PROJECT_DIR$/x-form-infrastructure/x-form-infrastructure.iml" />
+      <module fileurl="file://$PROJECT_DIR$/x-form-trigger/x-form-trigger.iml" filepath="$PROJECT_DIR$/x-form-trigger/x-form-trigger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/x-form-types/x-form-types.iml" filepath="$PROJECT_DIR$/x-form-types/x-form-types.iml" />
+    </modules>
+  </component>
+</project>
