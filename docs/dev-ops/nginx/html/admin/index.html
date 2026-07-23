@@ -18,11 +18,12 @@
     .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
     .card,.panel{background:#fff;border-radius:16px;padding:20px;box-shadow:0 6px 24px rgba(15,23,42,.06)}
     .panel h3{margin-top:0}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    input,textarea,button{font:inherit}
+    .grid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+    input,textarea,button,select{font:inherit}
     input,textarea,select{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:10px;margin-bottom:12px;background:#fff}
     button{background:#2563eb;color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer}
     button.secondary{background:#e5e7eb;color:#111827}
+    button.danger{background:#ef4444;color:#fff}
     table{width:100%;border-collapse:collapse}
     th,td{padding:12px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:14px;vertical-align:top}
     .muted{color:#6b7280;font-size:13px}
@@ -31,6 +32,12 @@
     #message{margin:0 0 12px;min-height:20px}
     .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
     .empty{padding:20px;border:1px dashed #cbd5e1;border-radius:12px;color:#64748b;background:#f8fafc}
+    .field-item{border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin-bottom:12px;background:#fafafa}
+    .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .check-line{display:flex;align-items:center;gap:8px;color:#475569;font-size:14px;margin:6px 0 12px}
+    .check-line input{width:auto;margin:0}
+    .panel-actions{display:flex;gap:12px;flex-wrap:wrap}
+    pre.schema-preview{white-space:pre-wrap;word-break:break-all;padding:12px;background:#0f172a;color:#e2e8f0;border-radius:12px;font-size:12px;max-height:260px;overflow:auto}
   </style>
 </head>
 <body>
@@ -45,7 +52,7 @@
     <div class="topbar">
       <div>
         <h2 style="margin:0">运营管理后台</h2>
-        <p class="muted" style="margin:6px 0 0">支持表单创建、分享、提交记录查看</p>
+        <p class="muted" style="margin:6px 0 0">支持图形化创建表单、分享、提交记录查看</p>
       </div>
       <div id="userBar" class="muted"></div>
     </div>
@@ -61,7 +68,7 @@
         <button id="loginBtn">登录</button>
         <button id="logoutBtn" class="secondary" type="button">退出登录</button>
       </div>
-      <p class="muted">说明：当前调用后端登录接口，接口成功后进入管理后台。</p>
+      <p class="muted">说明：当前调用后端登录接口，登录后进入管理后台。</p>
     </section>
 
     <div id="dashboard" style="display:none">
@@ -80,15 +87,23 @@
       <section id="formsSection" class="section">
         <div class="grid">
           <section class="panel">
-            <h3>创建表单</h3>
+            <h3>图形化创建表单</h3>
             <input id="title" placeholder="表单标题" />
             <textarea id="description" rows="3" placeholder="表单描述"></textarea>
-            <textarea id="schema" rows="8" placeholder='字段定义(JSON)，示例：[{"name":"username","label":"姓名","type":"text","required":true}]'></textarea>
+            <div class="panel-actions">
+              <button id="addTextFieldBtn" type="button">新增文本字段</button>
+              <button id="addTextareaFieldBtn" type="button">新增多行文本</button>
+              <button id="addNumberFieldBtn" type="button">新增数字字段</button>
+            </div>
+            <div id="fieldBuilder" style="margin-top:16px"></div>
+            <p class="muted">系统会自动生成 JSON，无需运营手写 schema。</p>
             <button id="createBtn">创建并生成分享链接</button>
             <p class="muted" id="shareLink"></p>
           </section>
           <section class="panel">
-            <h3>表单列表</h3>
+            <h3>字段 JSON 预览</h3>
+            <pre class="schema-preview" id="schemaPreview">[]</pre>
+            <h3 style="margin-top:20px">表单列表</h3>
             <table>
               <thead><tr><th>ID</th><th>标题</th><th>描述</th><th>分享链接</th></tr></thead>
               <tbody id="formTable"></tbody>
